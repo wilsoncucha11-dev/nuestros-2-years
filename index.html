@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nuestros 2 Años Juntos ❤️</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;1,400&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #d65a62;
+            --primary-dark: #b3424a;
+            --bg-cream: #fdf8f5;
+            --text-dark: #2c2526;
+            --text-muted: #6e6365;
+            --card-bg: #ffffff;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--bg-cream);
+            color: var(--text-dark);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+        h1, h2, h3, .serif { font-family: 'Playfair Display', serif; }
+
+        /* Pantalla de Contraseña */
+        #lock-screen {
+            position: fixed; inset: 0;
+            background: linear-gradient(135deg, #fceae8 0%, #f7d6d2 100%);
+            display: flex; flex-direction: column;
+            align-items: center; justify-content: center;
+            z-index: 1000; padding: 20px; text-align: center;
+            transition: opacity 0.6s ease;
+        }
+        .lock-box {
+            background: white; padding: 40px 30px;
+            border-radius: 20px; box-shadow: 0 15px 35px rgba(214, 90, 98, 0.15);
+            max-width: 380px; width: 100%;
+        }
+        .lock-box h2 { color: var(--primary); margin-bottom: 10px; font-size: 1.8rem; }
+        .lock-box p { font-size: 0.9rem; color: var(--text-muted); margin-bottom: 20px; }
+        .lock-box input {
+            width: 100%; padding: 12px; border: 2px solid #f0d5d7;
+            border-radius: 10px; font-size: 1.1rem; text-align: center;
+            margin-bottom: 15px; outline: none; letter-spacing: 3px;
+        }
+        .lock-box input:focus { border-color: var(--primary); }
+        .btn {
+            background: var(--primary); color: white; border: none;
+            padding: 12px 28px; border-radius: 25px; font-size: 1rem;
+            cursor: pointer; transition: 0.3s; font-weight: 600;
+        }
+        .btn:hover { background: var(--primary-dark); transform: translateY(-2px); }
+        #error-msg { color: #d93025; font-size: 0.85rem; margin-top: 10px; display: none; }
+
+        /* Contenido Principal */
+        #main-content { display: none; }
+
+        /* Portada */
+        header {
+            min-height: 90vh;
+            background: linear-gradient(rgba(44, 37, 38, 0.45), rgba(44, 37, 38, 0.65)), 
+                        url('foto (3).jpeg') center/cover no-repeat,
+                        url('foto (3).jpg') center/cover no-repeat;
+            background-color: #4a3538;
+            color: white; display: flex; flex-direction: column;
+            align-items: center; justify-content: center;
+            text-align: center; padding: 40px 20px;
+        }
+        header span { text-transform: uppercase; letter-spacing: 3px; font-size: 0.85rem; margin-bottom: 10px; }
+        header h1 { font-size: clamp(2.5rem, 6vw, 4.5rem); margin-bottom: 15px; }
+        header p { max-width: 600px; font-size: 1.1rem; opacity: 0.9; }
+
+        /* Contador */
+        .counter-section {
+            background: white; max-width: 850px; margin: -50px auto 60px;
+            padding: 35px 20px; border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.06); text-align: center;
+            position: relative; z-index: 10;
+        }
+        .counter-section h3 { color: var(--primary); margin-bottom: 20px; font-size: 1.4rem; }
+        .timer-grid {
+            display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px;
+        }
+        .time-box {
+            background: var(--bg-cream); padding: 15px 10px; border-radius: 12px;
+        }
+        .time-box span { display: block; font-size: clamp(1.5rem, 4vw, 2.3rem); font-weight: 600; color: var(--primary); }
+        .time-box small { color: var(--text-muted); font-size: 0.8rem; text-transform: uppercase; }
+
+        /* Contenedores Generales */
+        section { max-width: 1000px; margin: 0 auto 80px; padding: 0 20px; }
+        .section-title { text-align: center; margin-bottom: 45px; }
+        .section-title h2 { font-size: 2.3rem; color: var(--text-dark); }
+        .section-title p { color: var(--text-muted); }
+
+        /* Línea de Tiempo */
+        .timeline { position: relative; max-width: 750px; margin: 0 auto; }
+        .timeline::before {
+            content: ''; position: absolute; left: 20px; top: 0; bottom: 0;
+            width: 2px; background: #ebd1d3;
+        }
+        .timeline-item {
+            position: relative; padding-left: 55px; margin-bottom: 35px;
+        }
+        .timeline-dot {
+            position: absolute; left: 11px; top: 5px; width: 20px; height: 20px;
+            border-radius: 50%; background: var(--primary); border: 4px solid var(--bg-cream);
+        }
+        .timeline-card {
+            background: white; padding: 22px; border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.04);
+        }
+        .timeline-date { color: var(--primary); font-weight: 600; font-size: 0.85rem; }
+        .timeline-card h3 { margin: 5px 0 8px; font-size: 1.3rem; }
+
+        /* Galería de Fotos */
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+            gap: 18px;
+        }
+        .media-card {
+            background: white; border-radius: 15px; overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05); transition: transform 0.3s;
+        }
+        .media-card:hover { transform: translateY(-5px); }
+        .media-card img {
+            width: 100%; height: 280px; object-fit: cover; display: block; cursor: pointer;
+        }
+
+        /* Carta Final */
+        .letter-box {
+            background: white; padding: 45px 35px; border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(214, 90, 98, 0.08);
+            max-width: 750px; margin: 0 auto; border-top: 5px solid var(--primary);
+        }
+        .letter-box p { margin-bottom: 18px; font-size: 1.05rem; color: #3d3536; }
+        .signature { font-family: 'Playfair Display', serif; font-style: italic; font-size: 1.4rem; color: var(--primary); margin-top: 25px; }
+
+        /* Modal para ver fotos en grande */
+        #lightbox {
+            display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.9);
+            z-index: 2000; align-items: center; justify-content: center; padding: 20px;
+        }
+        #lightbox img { max-width: 95%; max-height: 90vh; border-radius: 10px; }
+
+        footer { text-align: center; padding: 30px; color: var(--text-muted); font-size: 0.9rem; }
+    </style>
+</head>
+<body>
+
+    <!-- PANTALLA DE BLOQUEO -->
+    <div id="lock-screen">
+        <div class="lock-box">
+            <h2>Solo para nosotros ❤️</h2>
+            <p>Ingresa nuestra fecha especial (DDMMAA) para abrir tu regalo de aniversario:</p>
+            <input type="password" id="pass-input" placeholder="Ej: 171124" maxlength="6">
+            <br>
+            <button class="btn" onclick="checkPassword()">Entrar</button>
+            <p id="error-msg">Esa no es nuestra fecha, inténtalo de nuevo ❤️</p>
+        </div>
+    </div>
+
+    <!-- CONTENIDO DE LA PÁGINA -->
+    <div id="main-content">
+        
+        <header>
+            <span>17 de Noviembre, 2024 — 2026</span>
+            <h1>Felices 2 Años, Mi Amor</h1>
+            <p>730 días de risas, aventuras y construir nuestra historia juntos. Esta página guarda algunos de mis momentos favoritos contigo.</p>
+        </header>
+
+        <!-- CONTADOR EN VIVO -->
+        <div class="counter-section">
+            <h3>Llevamos juntos exactamente:</h3>
+            <div class="timer-grid">
+                <div class="time-box"><span id="days">730</span><small>Días</small></div>
+                <div class="time-box"><span id="hours">00</span><small>Horas</small></div>
+                <div class="time-box"><span id="minutes">00</span><small>Minutos</small></div>
+                <div class="time-box"><span id="seconds">00</span><small>Segundos</small></div>
+            </div>
+        </div>
+
+        <!-- LÍNEA DE TIEMPO -->
+        <section>
+            <div class="section-title">
+                <h2>Nuestra Historia</h2>
+                <p>Pequeños capítulos de estos dos años</p>
+            </div>
+            <div class="timeline">
+                <div class="timeline-item">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-card">
+                        <span class="timeline-date">17 de Noviembre, 2024</span>
+                        <h3>El comienzo de todo</h3>
+                        <p>El día que decidimos empezar esta aventura juntos. Todavía recuerdo perfectamente lo nervioso y feliz que estaba.</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-card">
+                        <span class="timeline-date">Nuestros viajes y salidas</span>
+                        <h3>Nuestras primeras escapadas</h3>
+                        <p>Descubriendo lugares nuevos y dándome cuenta de que mi lugar favorito siempre es donde estés tú.</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-card">
+                        <span class="timeline-date">17 de Noviembre, 2025</span>
+                        <h3>Nuestro primer año</h3>
+                        <p>365 días de aprendizaje, apoyo mutuo y muchísimos recuerdos que guardo en el corazón.</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-card">
+                        <span class="timeline-date">17 de Noviembre, 2026</span>
+                        <h3>¡Hoy celebramos 2 años!</h3>
+                        <p>Y esto es apenas el principio de todo lo que nos falta por vivir.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- GALERÍA DE FOTOS -->
+        <section>
+            <div class="section-title">
+                <h2>Nuestros Recuerdos</h2>
+                <p>Toca cualquier foto para verla en grande</p>
+            </div>
+            <div class="gallery-grid" id="galeria-auto"></div>
+        </section>
+
+        <!-- CARTA FINAL -->
+        <section>
+            <div class="letter-box">
+                <h2 style="margin-bottom: 20px; color: var(--primary);">Para ti, en nuestros 2 años</h2>
+                <p>Feliz aniversario, mi amor. Quería hacer algo diferente para recordarte cuánto te amo y lo agradecido que estoy por estos dos años a tu lado.</p>
+                <p>Gracias por ser mi compañera, mi apoyo en los días difíciles y mi persona favorita para celebrar los días buenos. Cada foto de aquí arriba es prueba de lo feliz que me haces.</p>
+                <p>Por muchos años más juntos. Te amo muchísimo.</p>
+                <div class="signature">Con todo mi amor, [Tu Principe] ❤️</div>
+            </div>
+        </section>
+
+        <footer>
+            Hecho con ❤️ para celebrar nuestro 2° aniversario — 17/11/2026
+        </footer>
+    </div>
+
+    <!-- VISOR DE FOTOS AMPLIADAS -->
+    <div id="lightbox" onclick="this.style.display='none'">
+        <img id="lightbox-img" src="">
+    </div>
+
+    <script>
+        const PASSWORD_CORRECTA = "171124"; 
+        const FECHA_INICIO = new Date("2024-11-17T00:00:00");
+
+        function checkPassword() {
+            const input = document.getElementById("pass-input").value.trim();
+            if (input === PASSWORD_CORRECTA) {
+                document.getElementById("lock-screen").style.opacity = "0";
+                setTimeout(() => {
+                    document.getElementById("lock-screen").style.display = "none";
+                    document.getElementById("main-content").style.display = "block";
+                }, 600);
+            } else {
+                document.getElementById("error-msg").style.display = "block";
+            }
+        }
+
+        document.getElementById("pass-input").addEventListener("keypress", function(e) {
+            if (e.key === "Enter") checkPassword();
+        });
+
+        function updateTimer() {
+            const ahora = new Date();
+            const diferencia = ahora - FECHA_INICIO;
+
+            const dias = Math.floor(diferencia / (1000 * 60 * 60 * 24));
+            const horas = Math.floor((diferencia / (1000 * 60 * 60)) % 24);
+            const minutos = Math.floor((diferencia / 1000 / 60) % 60);
+            const segundos = Math.floor((diferencia / 1000) % 60);
+
+            document.getElementById("days").innerText = dias;
+            document.getElementById("hours").innerText = horas.toString().padStart(2, '0');
+            document.getElementById("minutes").innerText = minutos.toString().padStart(2, '0');
+            document.getElementById("seconds").innerText = segundos.toString().padStart(2, '0');
+        }
+        setInterval(updateTimer, 1000);
+        updateTimer();
+
+        function openLightbox(src) {
+            document.getElementById("lightbox-img").src = src;
+            document.getElementById("lightbox").style.display = "flex";
+        }
+
+        // CARGA AUTOMÁTICA DE LAS 51 FOTOS
+        const TOTAL_FOTOS = 51;
+        const galeria = document.getElementById("galeria-auto");
+
+        for (let i = 1; i <= TOTAL_FOTOS; i++) {
+            galeria.innerHTML += `
+                <div class="media-card">
+                    <img src="foto (${i}).jpeg" 
+                         onerror="this.onerror=null; this.src='foto (${i}).jpg';" 
+                         alt="Recuerdo ${i}" 
+                         loading="lazy" 
+                         onclick="openLightbox(this.src)">
+                </div>
+            `;
+        }
+    </script>
+</body>
+</html>
